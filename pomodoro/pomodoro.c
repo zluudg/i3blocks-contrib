@@ -40,6 +40,8 @@ int pipefd[2];
 
 void display(int state)
 {
+    int ret;
+
     switch (state)
     {
         case s_IDLE:
@@ -60,7 +62,8 @@ void display(int state)
         case s_NOTIFYING:
             printf(FMT_STRING, PURPLE, ACTIVATED, ORANGE, ACTIVATED);
             fflush(stdout);
-            system("i3-nagbar -t warning -m \"Pomodoro!\" &> /dev/null");
+            ret = system("i3-nagbar -t warning -m \"Pomodoro!\" &> /dev/null");
+            (void) ret;
         break;
 
         default: // should not happen
@@ -71,11 +74,14 @@ void display(int state)
 
 void *timer(void *arg)
 {
+    int ret;
+
     thread_info *tinfo = arg;
 
     sleep(tinfo->timer*60);
 
-    write(tinfo->fd, "!", 1);
+    ret = write(tinfo->fd, "!", 1);
+    (void) ret;
 
     pthread_exit(NULL);
 }
